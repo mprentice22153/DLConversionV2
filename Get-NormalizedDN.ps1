@@ -187,9 +187,7 @@
                         -Alias $functionTest.mailNickName
                         -Name $functionTest.Name
                         -PrimarySMTPAddressOrUPN $functionTest.mail
-                        -GUID $NULL
                         -RecipientType $functionTest.objectClass
-                        -GroupType $NULL
                         -RecipientOrUser "Recipient"
                         -ExternalDirectoryObjectID $functionTest.'msDS-ExternalDirectoryObjectId'
                         -isAlreadyMigrated $false
@@ -202,12 +200,9 @@
                 Out-LogFile -string "The object is a contact with a mail attribute - but is not fully exchange enabled."
                     
                     $functionObject = new-recipientObject
-                        -Alias $NULL
                         -Name $functionTest.Name
                         -PrimarySMTPAddressOrUPN $functionTest.mail
-                        -GUID $NULL
                         -RecipientType $functionTest.objectClass
-                        -GroupType $NULL
                         -RecipientOrUser "Recipient"
                         -ExternalDirectoryObjectID $functionTest.'msDS-ExternalDirectoryObjectId'
                         -isAlreadyMigrated $false
@@ -219,12 +214,9 @@
                 Out-LogFile -string "The object is a user only object hopefully in managedBY or USERS."
                     
                     $functionObject = new-recipientObject
-                        -Alias $NULL
                         -Name $functionTest.Name
                         -PrimarySMTPAddressOrUPN $functionTest.userPrincipalName
-                        -GUID $NULL
                         -RecipientType $functionTest.objectClass
-                        -GroupType $NULL
                         -RecipientOrUser "User"
                         -ExternalDirectoryObjectID $functionTest.'msDS-ExternalDirectoryObjectId'
                         -isAlreadyMigrated $FALSE
@@ -245,7 +237,6 @@
                         -Alias $functionTest.mailNickName
                         -Name $functionTest.Name
                         -PrimarySMTPAddressOrUPN $functionTest.mail
-                        -GUID $NULL
                         -RecipientType $functionTest.objectClass
                         -GroupType $functionTest.GroupType
                         -RecipientOrUser "Recipient"
@@ -266,7 +257,6 @@
                         -Alias $functionTest.mailNickName
                         -Name $functionTest.Name
                         -PrimarySMTPAddressOrUPN  $functionTest.extensionAttribute2
-                        -GUID $NULL
                         -RecipientType $functionTest.objectClass
                         -GroupType $functionTest.GroupType
                         -RecipientOrUser "Recipient"
@@ -295,7 +285,6 @@
                         -Alias $functionTest.mailNickName
                         -Name $functionTest.Name
                         -PrimarySMTPAddressOrUPN $functionTest.mail
-                        -GUID $NULL
                         -RecipientType $functionTest.objectClass
                         -GroupType $functionTest.GroupType
                         -RecipientOrUser "Recipient"
@@ -311,8 +300,6 @@
                     $functionObject = new-recipientObject
                         -Alias $null
                         -Name $dn
-                        -PrimarySMTPAddressOrUPN $null
-                        -GUID $NULL
                         -RecipientType $functionTest.objectClass
                         -GroupType $functionTest.GroupType
                         -RecipientOrUser "Recipient"
@@ -327,14 +314,10 @@
                 out-logfile -string ("The following object "+$dn+" is not mail enabled and must be removed or mail enabled to continue.")
 
                 $functionObject = new-recipientObject
-                    -Alias $null
                     -Name $dn
-                    -PrimarySMTPAddressOrUPN $null
-                    -GUID $NULL
                     -RecipientType $functionTest.objectClass
                     -GroupType $functionTest.GroupType
                     -RecipientOrUser "Recipient"
-                    -ExternalDirectoryObjectID $null
                     -isAlreadyMigrated $false
                     -isError $true
                     -isErrorMessage "The member is not mail enabled.  The object must be removed or mail enabled to continue."

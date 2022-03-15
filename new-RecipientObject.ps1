@@ -66,48 +66,28 @@
 
         Param
         (
-            [Parameter(Mandatory = $true)]
-            [AllowNull()]
-            [AllowEmptyString()]
-            [string]$alias,
-            [Parameter(Mandatory = $true)]
-            [AllowNull()]
-            [AllowEmptyString()]
-            [string]$name,
-            [Parameter(Mandatory = $true)]
-            [AllowNull()]
-            [AllowEmptyString()]
-            [string]$primarySMTPAddressOrUPN,
-            [Parameter(Mandatory = $true)]
-            [AllowNull()]
-            [AllowEmptyString()]
-            [string]$GUID,
-            [Parameter(Mandatory = $true)]
-            [AllowNull()]
-            [AllowEmptyString()]
-            [string]$recipientType,
-            [Parameter(Mandatory = $true)]
-            [AllowNull()]
-            [AllowEmptyString()]
-            [string]$GroupType,
-            [Parameter(Mandatory = $true)]
-            [AllowNull()]
-            [AllowEmptyString()]
-            [string]$RecipientOrUser,
-            [Parameter(Mandatory = $true)]
-            [AllowNull()]
-            [AllowEmptyString()]
-            [string]$ExternalDirectoryObjectID,
-            [Parameter(Mandatory = $true)]
-            [AllowNull()]
-            [boolean]$isAlreadyMigrated,
-            [Parameter(Mandatory = $true)]
-            [AllowNull()]
-            [boolean]$isError,
-            [Parameter(Mandatory = $true)]
-            [AllowNull()]
-            [AllowEmptyString()]
-            [string]$isErrorMessage
+            [Parameter(Mandatory = $false)]
+            $alias=$NULL,
+            [Parameter(Mandatory = $false)]
+            $name=$NULL,
+            [Parameter(Mandatory = $false)]
+            $primarySMTPAddressOrUPN=$NULL,
+            [Parameter(Mandatory = $false)]
+            $GUID=$NULL,
+            [Parameter(Mandatory = $false)]
+            $recipientType=$NULL,
+            [Parameter(Mandatory = $false)]
+            $GroupType=$null,
+            [Parameter(Mandatory = $false)]
+            $RecipientOrUser=$NULL,
+            [Parameter(Mandatory = $false)]
+            $ExternalDirectoryObjectID=$NULL,
+            [Parameter(Mandatory = $false)]
+            $isAlreadyMigrated=$NULL,
+            [Parameter(Mandatory = $false)]
+            $isError=$NULL,
+            [Parameter(Mandatory = $false)]
+            $isErrorMessage=$NULL
 
         )
 
