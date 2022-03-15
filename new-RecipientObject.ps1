@@ -67,26 +67,37 @@
         Param
         (
             [Parameter(Mandatory = $true)]
+            [AllowNull()]
             $alias,
             [Parameter(Mandatory = $true)]
+            [AllowNull()]
             $name,
             [Parameter(Mandatory = $true)]
+            [AllowNull()]
             $primarySMTPAddressOrUPN,
             [Parameter(Mandatory = $true)]
+            [AllowNull()]
             $GUID,
             [Parameter(Mandatory = $true)]
+            [AllowNull()]
             $recipientType,
             [Parameter(Mandatory = $true)]
+            [AllowNull()]
             $GroupType,
             [Parameter(Mandatory = $true)]
+            [AllowNull()]
             $RecipientOrUser,
             [Parameter(Mandatory = $true)]
+            [AllowNull()]
             $ExternalDirectoryObjectID,
             [Parameter(Mandatory = $true)]
+            [AllowNull()]
             $isAlreadyMigrated,
             [Parameter(Mandatory = $true)]
+            [AllowNull()]
             $isError,
             [Parameter(Mandatory = $true)]
+            [AllowNull()]
             $isErrorMessage
 
         )
