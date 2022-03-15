@@ -68,37 +68,46 @@
         (
             [Parameter(Mandatory = $true)]
             [AllowNull()]
-            $alias,
+            [AllowEmptyString()]
+            [string]$alias,
             [Parameter(Mandatory = $true)]
             [AllowNull()]
-            $name,
+            [AllowEmptyString()]
+            [string]$name,
             [Parameter(Mandatory = $true)]
             [AllowNull()]
-            $primarySMTPAddressOrUPN,
+            [AllowEmptyString()]
+            [string]$primarySMTPAddressOrUPN,
             [Parameter(Mandatory = $true)]
             [AllowNull()]
-            $GUID,
+            [AllowEmptyString()]
+            [string]$GUID,
             [Parameter(Mandatory = $true)]
             [AllowNull()]
-            $recipientType,
+            [AllowEmptyString()]
+            [string]$recipientType,
             [Parameter(Mandatory = $true)]
             [AllowNull()]
-            $GroupType,
+            [AllowEmptyString()]
+            [string]$GroupType,
             [Parameter(Mandatory = $true)]
             [AllowNull()]
-            $RecipientOrUser,
+            [AllowEmptyString()]
+            [string]$RecipientOrUser,
             [Parameter(Mandatory = $true)]
             [AllowNull()]
-            $ExternalDirectoryObjectID,
+            [AllowEmptyString()]
+            [string]$ExternalDirectoryObjectID,
             [Parameter(Mandatory = $true)]
             [AllowNull()]
-            $isAlreadyMigrated,
+            [boolean]$isAlreadyMigrated,
             [Parameter(Mandatory = $true)]
             [AllowNull()]
-            $isError,
+            [boolean]$isError,
             [Parameter(Mandatory = $true)]
             [AllowNull()]
-            $isErrorMessage
+            [AllowEmptyString()]
+            [string]$isErrorMessage
 
         )
 
