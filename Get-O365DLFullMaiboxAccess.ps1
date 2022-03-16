@@ -130,7 +130,12 @@
             }
             #>
 
+            out-logfile -string ("Attemping to locate send as rights for ="+$functionRecipient.identity)
+
             $functionFullMailboxAccess = $collectedData | where {$_.user -eq $functionRecipient.identity}
+
+            out-logfile -string ("Attempting to locate send as rights for = "+$functionRecipient.primarySMTPAddress)
+
             $functionFullMailboxAccess += $collectedData | where {$_.user -eq $functionRecipient.primarySMTPAddress}
         }
 
