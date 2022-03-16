@@ -35,6 +35,7 @@
         #Declare function variables.
 
         [array]$functionFolderAccess=@()
+        $functionRecipient=$NULL
 
         #Start function processing.
 
@@ -54,9 +55,13 @@
         }
         elseif ($collectedData -ne $NULL)
         {
-            $ProgressDelta = 100/($collectedData.count); $PercentComplete = 0; $MbxNumber = 0
-
             out-logfile -string "Processing folder permissions for imported data."
+
+            $functionRecipient = get-ExoRecipient -identity $groupSMTPAddress
+
+            <#
+
+            $ProgressDelta = 100/($collectedData.count); $PercentComplete = 0; $MbxNumber = 0
 
             foreach ($folder in $collectedData)
             {
@@ -71,6 +76,10 @@
                     $functionFolderAccess+=$folder
                 }
             }
+
+            #>
+
+            $functionFolderAccess = $collectedData | where {$_.user.userprincipalName -eq $functionRecipient.primarySMTPAddress}
         }
 
         write-progress -activity "Processing Recipient" -completed
