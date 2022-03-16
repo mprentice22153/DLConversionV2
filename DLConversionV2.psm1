@@ -1983,6 +1983,17 @@ Function Start-DistributionListMigration
         }
     }
 
+    if ($exchangeGrantSendOnBehalfToSMTP -ne $NULL)
+    {
+        Out-LogFile -string "The following objects are members of the grant send on behalf to:"
+        
+        out-logfile -string $exchangeGrantSendOnBehalfToSMTP
+    }
+    else 
+    {
+        out-logfile "The group has no grant send on behalf to."    
+    }
+
     Out-LogFile -string "Invoke get-normalizedDN for any on premises object that the migrated group has send as permissions."
 
     Out-LogFile -string "GROUPS WITH SEND AS PERMISSIONS"
@@ -2033,18 +2044,7 @@ Function Start-DistributionListMigration
         }
     }
 
-    if ($exchangeGrantSendOnBehalfToSMTP -ne $NULL)
-    {
-        Out-LogFile -string "The following objects are members of the grant send on behalf to:"
-        
-        out-logfile -string $exchangeGrantSendOnBehalfToSMTP
-    }
-    else 
-    {
-        out-logfile "The group has no grant send on behalf to."    
-    }
-
-    #At this time we have discovered all permissions based off the LDAP properties of the users.  The one remaining is what objects have SENDAS rights on this DL.
+   #At this time we have discovered all permissions based off the LDAP properties of the users.  The one remaining is what objects have SENDAS rights on this DL.
 
     out-logfile -string "Obtaining send as permissions."
 
@@ -2082,6 +2082,8 @@ Function Start-DistributionListMigration
     out-logfile -string ("The number of objects included in the grantSendOnBehalfTo memebers: "+$exchangeGrantSendOnBehalfToSMTP.count)
     out-logfile -string ("The number of objects included in the send as rights: "+$exchangeSendAsSMTP.count)
     out-logfile -string ("The number of groups on premsies that this group has send as rights on: "+$allObjectsSendAsAccessNormalized.Count)
+    out-logfile -string ("The number of groups on premises that this group has full mailbox access on: "+$allObjectsFullMailboxAccess.count)
+    out-logfile -string ("The number of mailbox folders on premises that this group has access to: "+$allMailboxesFolderPermissions.count)
     out-logfile -string "/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/"
 
     #Exit #Debug Exit.
