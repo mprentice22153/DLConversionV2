@@ -36,6 +36,7 @@
 
         [array]$functionPermissions=@()
         $functionRecipients=@()
+        $functionQueryName=("*"+$originalDLConfiguration.sAMAccountName)
 
         Out-LogFile -string "********************************************************************************"
         Out-LogFile -string "BEGIN Get-onPremFullMailboxAccess"
@@ -99,6 +100,8 @@
             {
                 out-logfile -string "Testing for full mailbo access rights.."
 
+                <#
+
                 $ProgressDelta = 100/($collectedData.count); $PercentComplete = 0; $MbxNumber = 0
 
                 foreach ($recipient in $collectedData)
@@ -121,6 +124,10 @@
                         }
                     } 
                 }
+
+                #>
+
+                $functionPermissions = $collectedData | where {$_.user -like $functionQueryName}
             }
             catch 
             {
