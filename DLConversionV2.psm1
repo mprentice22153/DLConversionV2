@@ -3746,7 +3746,7 @@ Function Start-DistributionListMigration
 
     do {
         try {
-            new-office365dl -originalDLConfiguration $originalDLConfiguration -office365DLConfiguration $office365DLConfiguration -grouptypeoverride $groupTypeOverride -errorAction STOP
+            $office365DLConfigurationPostMigration=new-office365dl -originalDLConfiguration $originalDLConfiguration -office365DLConfiguration $office365DLConfiguration -grouptypeoverride $groupTypeOverride -errorAction STOP
 
             #If we made it this far then the group was created.
 
@@ -3782,6 +3782,10 @@ Function Start-DistributionListMigration
             #Group may not have exchange attributes on premises.
             #Use the Office 365 values to obtain new group.
 
+            #Removing this code.  I used a return from the newDL to capture the newDL configuraiton due to later ambigous items.
+
+            <#
+
             if ($originalDLConfiguration.mailNickName -ne $NULL)
             {
                 out-logfile -string "On premises object has mail nickname / alias -> use this value to obtain new group."
@@ -3798,6 +3802,8 @@ Function Start-DistributionListMigration
 
                 $loopCounter=$loopCounter+1
             }
+
+            #>
             
             #If we hit here we did not get a terminating error.  Write the configuration.
 
@@ -3866,7 +3872,7 @@ Function Start-DistributionListMigration
 
     do {
         try {
-            $office365DLConfigurationPostMigration = Get-O365DLConfiguration -groupSMTPAddress $originalDLConfiguration.mail -groupTypeOverride $groupTypeOverride -errorAction STOP
+            $office365DLConfigurationPostMigration = Get-O365DLConfiguration -groupSMTPAddress $office365DLConfigurationPostMigration.externalDirectoryObjectID -errorAction STOP
 
             #If we made it this far we were successful - output the information to XML.
 
@@ -3934,7 +3940,7 @@ Function Start-DistributionListMigration
 
     do {
         try {
-            $office365DLConfigurationPostMigration = Get-O365DLConfiguration -groupSMTPAddress $originalDLConfiguration.mail -groupTypeOverride $groupTypeOverride -errorAction STOP
+            $office365DLConfigurationPostMigration = Get-O365DLConfiguration -groupSMTPAddress $office365DLConfigurationPostMigration.externalDirectoryObjectID -errorAction STOP
 
             #If we made it this far we successfully got the DL.  Write it.
 
