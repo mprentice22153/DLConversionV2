@@ -132,8 +132,6 @@
 
             $functionFullMailboxAccess = $collectedData | where {$_.user -eq $functionRecipient.identity}
             $functionFullMailboxAccess += $collectedData | where {$_.user -eq $functionRecipient.primarySMTPAddress}
-
-            $functionFullMailboxAccess = $functionFullMailboxAccess | Select-Object -Unique
         }
 
         Out-LogFile -string "END Get-O365DLFullMaiboxAccess"
