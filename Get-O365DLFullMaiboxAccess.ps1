@@ -106,6 +106,7 @@
             catch {
                 out-logfile -string $_ -isError:$TRUE
             }
+            <#
 
             $ProgressDelta = 100/($collectedData.count); $PercentComplete = 0; $MbxNumber = 0
 
@@ -127,6 +128,12 @@
                     }
                 }
             }
+            #>
+
+            $functionFullMailboxAccess = $collectedData | where {$_.user -eq $functionRecipient.identity}
+            $functionFullMailboxAccess += $collectedData | where {$_.user -eq $functionRecipient.primarySMTPAddress}
+
+            $functionFullMailboxAccess = $functionFullMailboxAccess | Select-Object -Unique
         }
 
         Out-LogFile -string "END Get-O365DLFullMaiboxAccess"
