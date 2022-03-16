@@ -36,7 +36,7 @@
 
         [array]$functionSendAsRights=@()
         $functionRecipients=$NULL
-        $functionQueryName=("*"+$originalDLConfiguration.sAMAccountName+"*")
+        $functionQueryName=("*"+$originalDLConfiguration.sAMAccountName)
         [array]$functionSendAsIdentities=@()
         [int]$functionCounter=0
 
@@ -125,6 +125,7 @@
             try 
             {
                 out-logfile -string "Test for send as rights."
+                <#
 
                 $ProgressDelta = 100/($collectedData.count); $PercentComplete = 0; $MbxNumber = 0
 
@@ -148,6 +149,9 @@
                         }
                     } 
                 }
+                #>
+
+                $functionSendAsIdentities = $collectedData | where {$_.user -like $functionQueryName}
             }
             catch 
             {
