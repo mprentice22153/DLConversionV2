@@ -45,6 +45,8 @@
         {
             out-logfile -string "Test for folder permissions."
 
+            <#
+
             $ProgressDelta = 100/($collectedData.count); $PercentComplete = 0; $MbxNumber = 0
 
             foreach ($recipient in $collectedData)
@@ -67,6 +69,10 @@
                     }
                 } 
             }
+
+            #>
+
+            $functionFolderRightsUsers = $collectedData | where {$_.user.adrecipient.samAccountName -eq $originalDLConfiguration.samAccountName}
         }
         catch 
         {
