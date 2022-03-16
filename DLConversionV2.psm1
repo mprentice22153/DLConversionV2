@@ -3229,6 +3229,8 @@ Function Start-DistributionListMigration
             }
         }
 
+        out-logfile -string ("The number of groups in Office 365 cloud only that the DL has send as rights on = "+$allOffice365SendAsAccess.count)
+
         if ($retainFullMailboxAccessOffice365 -eq $TRUE)
         {
             if ($useCollectedFullMailboxAccessOffice365 -eq $FALSE)
@@ -3262,6 +3264,8 @@ Function Start-DistributionListMigration
  
         }  
 
+        out-logfile -string ("The number of Office 365 mailboxes that have full mailbox access rights for the migrated group ="+$allOffice365FullMailboxAccess.count)
+
         if ($useCollectedFolderPermissionsOffice365 -eq $TRUE)
         {
             out-logfile -string "Administrator has opted to retain folder permissions in Office 365."
@@ -3283,6 +3287,8 @@ Function Start-DistributionListMigration
                 out-logfile -string $_ -isError:$TRUE
             }
         }
+
+        out-logfile -string ("The number of Office 365 mailboxes folders that have folder permissions for the migrated group ="+$allOffice365MailboxFolderPermissions.count)
 
         if ($allOffice365MemberOf -ne $NULL)
         {
