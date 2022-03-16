@@ -198,7 +198,7 @@ Function Start-DistributionListMigration
         [Parameter(Mandatory = $false)]
         [boolean]$retainFullMailboxAccessOffice365=$FALSE,
         [Parameter(Mandatory = $false)]
-        [boolean]$retainSendAsOffice365=$FALSE,
+        [boolean]$retainSendAsOffice365=$TRUE,
         [Parameter(Mandatory = $false)]
         [boolean]$useCollectedFullMailboxAccessOnPrem=$FALSE,
         [Parameter(Mandatory = $false)]
