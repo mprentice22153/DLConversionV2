@@ -217,7 +217,7 @@
                 {
                     out-logfile -string "A group was found as a member and that group was previously migrated."
 
-                    $functionObject = new-recipientObjectn-Alias  $functionTest.mailNickName -Name  $functionTest.Name -PrimarySMTPAddressOrUPN  $functionTest.extensionAttribute2 -GUID  $NULL -RecipientType  $functionTest.objectClass -GroupType  $functionTest.GroupType                        -RecipientOrUser  "Recipient"                        -ExternalDirectoryObjectID  $functionTest.'msDS-ExternalDirectoryObjectId'                        -isAlreadyMigrated  $true                        -isError $false                        -isErrorMessage ""
+                    $functionObject = new-recipientObjectn -Alias $functionTest.mailNickName -Name $functionTest.Name -PrimarySMTPAddressOrUPN $functionTest.extensionAttribute2 -GUID $NULL -RecipientType $functionTest.objectClass -GroupType $functionTest.GroupType -RecipientOrUser "Recipient" -ExternalDirectoryObjectID $functionTest.'msDS-ExternalDirectoryObjectId' -isAlreadyMigrated $true -isError $false -isErrorMessage ""
                 }
                 
                 elseif (($functionTest.msExchRecipientDisplayType -ne $NULL) -and ($isMember -eq $TRUE)) 
@@ -235,20 +235,20 @@
                     out-logfile -string "The group has permissions on the DL and this is permissiable."
                     out-logfile -string $dn
 
-                    $functionObject = new-recipientObject -Alias  $functionTest.mailNickName -Name  $functionTest.Name -PrimarySMTPAddressOrUPN  $functionTest.mail -GUID  $NULL -RecipientType  $functionTest.objectClass -GroupType  $functionTest.GroupType -RecipientOrUser  "Recipient" -ExternalDirectoryObjectID  $functionTest.'msDS-ExternalDirectoryObjectId' -isAlreadyMigrated  $false -isError $false -isErrorMessage ""
+                    $functionObject = new-recipientObject -Alias $functionTest.mailNickName -Name $functionTest.Name -PrimarySMTPAddressOrUPN $functionTest.mail -GUID $NULL -RecipientType $functionTest.objectClass -GroupType $functionTest.GroupType -RecipientOrUser "Recipient" -ExternalDirectoryObjectID $functionTest.'msDS-ExternalDirectoryObjectId' -isAlreadyMigrated $false -isError $false -isErrorMessage ""
                 }
                 else 
                 {
                     out-logfile -string ("The following object "+$dn+" is not mail enabled and must be removed or mail enabled to continue.")
 
-                    $functionObject = new-recipientObject -Alias  $null -Name  $dn -PrimarySMTPAddressOrUPN  $null -GUID $NULL -RecipientType $functionTest.objectClass -GroupType $functionTest.GroupType -RecipientOrUser "Recipient" -ExternalDirectoryObjectID $null -isAlreadyMigrated $false -isError $true -isErrorMessage "The member is not mail enabled.  The object must be removed or mail enabled to continue."
+                    $functionObject = new-recipientObject -Alias $null -Name $dn -PrimarySMTPAddressOrUPN $null -GUID $NULL -RecipientType $functionTest.objectClass -GroupType $functionTest.GroupType -RecipientOrUser "Recipient" -ExternalDirectoryObjectID $null -isAlreadyMigrated $false -isError $true -isErrorMessage "The member is not mail enabled.  The object must be removed or mail enabled to continue."
                 }
             }
             else 
             {
                 out-logfile -string ("The following object "+$dn+" is not mail enabled and must be removed or mail enabled to continue.")
 
-                $functionObject = new-recipientObject Alias $null -Name $dn -PrimarySMTPAddressOrUPN $null -GUID $NULL -RecipientType $functionTest.objectClass -GroupType $functionTest.GroupType -RecipientOrUser "Recipient" -ExternalDirectoryObjectID $null -isAlreadyMigrated $false -isError $true -isErrorMessage "The member is not mail enabled.  The object must be removed or mail enabled to continue."
+                $functionObject = new-recipientObject -Alias $null -Name $dn -PrimarySMTPAddressOrUPN $null -GUID $NULL -RecipientType $functionTest.objectClass -GroupType $functionTest.GroupType -RecipientOrUser "Recipient" -ExternalDirectoryObjectID $null -isAlreadyMigrated $false -isError $true -isErrorMessage "The member is not mail enabled.  The object must be removed or mail enabled to continue."
             }    
         }
         catch
