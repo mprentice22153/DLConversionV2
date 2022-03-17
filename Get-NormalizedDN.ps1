@@ -182,7 +182,7 @@
                 {
                     Out-LogFile -string "The object was not previously migrated - using directory information."
                     
-                    $functionObject = new-recipientObject -Alias $functionTest.mailNickName -Name $functionTest.Name -PrimarySMTPAddressOrUPN $functionTest.mail -GUID $NULL -RecipientType $functionTest.objectClass -GroupType $NULL -RecipientOrUser "Recipient" -ExternalDirectoryObjectID $functionTest.'msDS-ExternalDirectoryObjectId'-isA lreadyMigrated $false -isError $false -isErrorMessage ""
+                    $functionObject = new-recipientObject -Alias $functionTest.mailNickName -Name $functionTest.Name -PrimarySMTPAddressOrUPN $functionTest.mail -GUID $NULL -RecipientType $functionTest.objectClass -GroupType $NULL -RecipientOrUser "Recipient" -ExternalDirectoryObjectID $functionTest.'msDS-ExternalDirectoryObjectId'-isAlreadyMigrated $false -isError $false -isErrorMessage ""
                 }
             }
             elseif (($functiontest.mail -ne $NULL) -and ($functiontest.msExchRecipientDisplayType -eq $NULL) -and ($functionTest.objectClass -eq "Contact"))
