@@ -135,7 +135,7 @@
                 out-logfile -string $_ -isError:$TRUE
             }
 
-            write-progress -Activity "Processing Recipient" -Completed
+            #write-progress -Activity "Processing Recipient" -Completed
         }
 
         Out-LogFile -string "********************************************************************************"
@@ -145,6 +145,7 @@
         
         if ($functionPermissions.count -gt 0)
         {
+            out-logfile -string $functionPermissions
             return $functionPermissions
         }
     }

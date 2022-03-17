@@ -82,13 +82,14 @@
             $functionFolderAccess = $collectedData | where {$_.user.userprincipalName -eq $functionRecipient.primarySMTPAddress}
         }
 
-        write-progress -activity "Processing Recipient" -completed
+        #write-progress -activity "Processing Recipient" -completed
 
         Out-LogFile -string "END Get-O365DLMailboxFolderPermissions"
         Out-LogFile -string "********************************************************************************"
         
         if ($functionFolderAccess.count -gt 0)
         {
+            out-logfile -string $functionFolderAccess
             return $functionFolderAccess
         }
     }

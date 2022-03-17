@@ -144,6 +144,7 @@
         
         if ($functionFullMailboxAccess.count -gt 0)
         {
+            out-logfile -string $functionFullMailboxAccess
             return $functionFullMailboxAccess
         }
     }

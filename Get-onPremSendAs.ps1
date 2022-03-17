@@ -159,7 +159,7 @@
                 out-logfile -string $_ -isError:$TRUE
             }
 
-            write-progress -Activity "Processing Recipient" -Completed
+            #write-progress -Activity "Processing Recipient" -Completed
         }
         else 
         {
@@ -172,6 +172,7 @@
 
         if ($functionSendAsIdentities.count -gt 0)
         {
+            out-logfile -string $functionSendAsIdentities
             return $functionSendAsIdentities
         }
     }

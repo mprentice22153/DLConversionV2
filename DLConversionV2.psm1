@@ -1199,7 +1199,7 @@ Function Start-DistributionListMigration
                 $allMailboxesFolderPermissions = get-onPremFolderPermissions -originalDLConfiguration $originalDLConfiguration -collectedData $importData
             }
             catch {
-                out-logfile -string "Unable to process send as rights on premises."
+                out-logfile -string "Unable to process on prem folder permissions."
                 out-logfile -string $_ -isError:$TRUE
             }  
         }
