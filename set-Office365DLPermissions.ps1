@@ -218,7 +218,7 @@
                     out-logfile -string ("Processing permission trustee = "+$permission.user)
                     out-logfile -string ("Processing permission access rights = "+$permission.AccessRights)
 
-                    add-o365MailboxFolderPermission -identity $permission.identity -user $permission.user -accessRights $permission.AccessRights -confirm:$FALSE -errorAction STOP
+                    add-o365MailboxFolderPermission -identity $permission.identity -user $permission.user.userPrincipalName -accessRights $permission.AccessRights -confirm:$FALSE -errorAction STOP
                 }
                 catch {
                     out-logFile -string "Unable to add the full mailbox access permission in Office 365."

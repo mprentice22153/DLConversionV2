@@ -180,14 +180,14 @@
                 {
                     Out-LogFile -string "The object was not previously migrated - using directory information."
                     
-                    $functionObject = new-recipientObject -Alias $functionTest.mailNickName -Name $functionTest.Name -PrimarySMTPAddressOrUPN $functionTest.mail -RecipientType $functionTest.objectClass -RecipientOrUser "Recipient" -ExternalDirectoryObjectID $functionTest.'msDS-ExternalDirectoryObjectId' -isAlreadyMigrated $false -isError $false -isErrorMessage ""
+                    $functionObject = new-recipientObject -Alias $functionTest.mailNickName -Name $functionTest.Name -PrimarySMTPAddressOrUPN $functionTest.extensionAttribute2 -GUID $NULL -RecipientType $functionTest.objectClass -GroupType $NULL -RecipientOrUser "Recipient" -ExternalDirectoryObjectID $functionTest.'msDS-ExternalDirectoryObjectId' -isAlreadyMigrated $true -isError $false -isErrorMessage ""
                 }
             }
             elseif (($functiontest.mail -ne $NULL) -and ($functiontest.msExchRecipientDisplayType -eq $NULL) -and ($functionTest.objectClass -eq "Contact"))
             {
                 Out-LogFile -string "The object is a contact with a mail attribute - but is not fully exchange enabled."
                     
-                    $functionObject = new-recipientObject -Name $functionTest.Name -PrimarySMTPAddressOrUPN $functionTest.mail -RecipientType $functionTest.objectClass -RecipientOrUser "Recipient" -ExternalDirectoryObjectID $functionTest.'msDS-ExternalDirectoryObjectId' -isAlreadyMigrated $false -isError $false -isErrorMessage ""
+                $functionObject = new-recipientObject -Name $functionTest.Name -PrimarySMTPAddressOrUPN $functionTest.mail -RecipientType $functionTest.objectClass -RecipientOrUser "Recipient" -ExternalDirectoryObjectID $functionTest.'msDS-ExternalDirectoryObjectId' -isAlreadyMigrated $false -isError $false -isErrorMessage ""       
             }
             elseif ($functionTest.objectClass -eq "User")
             {
