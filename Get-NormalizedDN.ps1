@@ -217,7 +217,7 @@
                 {
                     out-logfile -string "A group was found as a member and that group was previously migrated."
 
-                    $functionObject = new-recipientObjectn -Alias $functionTest.mailNickName -Name $functionTest.Name -PrimarySMTPAddressOrUPN $functionTest.extensionAttribute2 -GUID $NULL -RecipientType $functionTest.objectClass -GroupType $functionTest.GroupType -RecipientOrUser "Recipient" -ExternalDirectoryObjectID $functionTest.'msDS-ExternalDirectoryObjectId' -isAlreadyMigrated $true -isError $false -isErrorMessage ""
+                    $functionObject = new-recipientObject -Alias $functionTest.mailNickName -Name $functionTest.Name -PrimarySMTPAddressOrUPN $functionTest.extensionAttribute2 -GUID $NULL -RecipientType $functionTest.objectClass -GroupType $functionTest.GroupType -RecipientOrUser "Recipient" -ExternalDirectoryObjectID $functionTest.'msDS-ExternalDirectoryObjectId' -isAlreadyMigrated $true -isError $false -isErrorMessage ""
                 }
                 
                 elseif (($functionTest.msExchRecipientDisplayType -ne $NULL) -and ($isMember -eq $TRUE)) 
