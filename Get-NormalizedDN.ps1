@@ -112,7 +112,7 @@
                     #Canonical name is a calculated value - need to tranlate to DN and then search directory.
 
                     try{
-                        $DN = get-distinguishedName -canonicalName $ -errorAction STOP
+                        $DN = get-distinguishedName -canonicalName $cn -errorAction STOP
                     }
                     catch{
                         out-logfile -string "Unable to obtain DN."
