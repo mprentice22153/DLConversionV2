@@ -207,7 +207,7 @@
                     out-logFile -string "The group has permissions to itself - this is permissable - adding to array."
                     #The group has permissions to itself and this is permissiable.
 
-                    $functionObject = new-recipientObject -Alias $functionTest.mailNickName -Name $functionTest.Name -PrimarySMTPAddressOrUPN $functionTest.mail -GUID $NULL -RecipientType $functionTest.objectClass -GroupType $functionTest.GroupType -RecipientOrUser "Recipient" -ExternalDirectoryObjectID $functionTest.'msDS-ExternalDirectoryObjectId' -isAlreadyMigrated $false -isError$false -isErrorMessage""
+                    $functionObject = new-recipientObject -Alias $functionTest.mailNickName -Name $functionTest.Name -PrimarySMTPAddressOrUPN $functionTest.mail -GUID $NULL -RecipientType $functionTest.objectClass -GroupType $functionTest.GroupType -RecipientOrUser "Recipient" -ExternalDirectoryObjectID $functionTest.'msDS-ExternalDirectoryObjectId' -isAlreadyMigrated $false -isError $false -isErrorMessage""
                 }
 
                 #A group can be present that was previously migrated and then disabled - if so allow the migration to proceed.
