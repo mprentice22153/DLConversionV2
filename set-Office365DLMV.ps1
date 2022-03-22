@@ -60,7 +60,7 @@
 
     #>
     Function set-Office365DLMV
-     {
+    {
         [cmdletbinding()]
 
         Param
@@ -1106,4 +1106,4 @@
 
         out-logfile -string ("The number of function Errors = "+$functionErrors.count)
         $global:postCreateErrors += $functionErrors
-    
+    }
