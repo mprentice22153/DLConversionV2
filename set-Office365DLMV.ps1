@@ -376,7 +376,7 @@
 
         #If preCreate is TRUE we can go ahead and process all the dependencies. 
 
-        if ($preCreate -eq $TRUE)
+        if ($preDelete -eq $TRUE)
         {
             $isTestError=$FALSE
 
