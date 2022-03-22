@@ -3549,6 +3549,143 @@ Function Start-DistributionListMigration
     Out-LogFile -string "END RETAIN OFFICE 365 GROUP DEPENDENCIES"
     Out-LogFile -string "********************************************************************************"
 
+    #Creating the new temporary group in Office 365.
+
+    out-logfile "Attempting to create the DL in Office 365."
+
+    $stopLoop = $FALSE
+    [int]$loopCounter = 0
+
+    do {
+        try {
+            $office365DLConfigurationPostMigration=new-office365dl -originalDLConfiguration $originalDLConfiguration -office365DLConfiguration $office365DLConfiguration -grouptypeoverride $groupTypeOverride -errorAction STOP
+
+            #If we made it this far then the group was created.
+
+            $stopLoop=$TRUE
+        }
+        catch {
+            if ($loopCounter -gt 10)
+            {
+                out-logFile -string $_ -isError:$TRUE 
+            }
+            else 
+            {
+                out-logfile -string "Unable to create the distribution list on attempt.  Retry"
+
+                if ($loopCounter -gt 0)
+                {
+                    start-sleepProgress -sleepSeconds ($loopCounter * 5) -sleepstring "Invoke sleep - error creating distribution group."
+                }
+                $loopCounter=$loopCounter+1
+            }
+        }
+    } while ($stopLoop -eq $FALSE)
+
+    #Write out the tempoary group information.
+
+    $stopLoop = $FALSE
+    [int]$loopCounter = 0
+
+    do 
+    {
+        try {
+                        
+            #If we hit here we did not get a terminating error.  Write the configuration.
+
+            out-LogFile -string "Write new DL configuration to XML."
+
+            out-Logfile -string $office365DLConfigurationPostMigration
+            out-xmlFile -itemToExport $office365DLConfigurationPostMigration -itemNameToExport $office365DLConfigurationPostMigrationXML
+            
+            #If we made it this far we can end the loop - we were succssful.
+
+            $stopLoop=$TRUE
+        }
+        catch {
+            if ($loopCounter -gt 10)
+            {
+                out-logfile -string "Unable to get Office 365 distribution list configuration after 10 tries."
+                $stopLoop -eq $TRUE
+            }
+            else 
+            {
+                start-sleepProgress -sleepString "Unable to capture the Office 365 DL configuration.  Sleeping 15 seconds." -sleepSeconds 15
+
+                $loopCounter = $loopCounter+1 
+            }
+        }   
+    } while ($stopLoop -eq $false)
+
+    #The first round of multivalued attributes were set - now that the group is gone we can proceed with updating the SMTP addresses.
+
+    out-logFile -string "Setting the multivalued attributes of the migrated group."
+
+    out-logfile -string $office365DLConfigurationPostMigration.primarySMTPAddress
+
+    [int]$loopCounter=0
+    [boolean]$stopLoop = $FALSE
+    
+    do {
+        try {
+            set-Office365DLMV -originalDLConfiguration $originalDLConfiguration -office365DLConfiguration $office365DLConfiguration -office365DLConfigurationPostMigration $office365DLConfigurationPostMigration -exchangeDLMembership $exchangeDLMembershipSMTP -exchangeRejectMessage $exchangeRejectMessagesSMTP -exchangeAcceptMessage $exchangeAcceptMessagesSMTP -exchangeModeratedBy $exchangeModeratedBySMTP -exchangeManagedBy $exchangeManagedBySMTP -exchangeBypassMOderation $exchangeBypassModerationSMTP -exchangeGrantSendOnBehalfTo $exchangeGrantSendOnBehalfToSMTP -errorAction STOP -groupTypeOverride $groupTypeOverride -exchangeSendAsSMTP $exchangeSendAsSMTP -mailOnMicrosoftComDomain $mailOnMicrosoftComDomain -allowNonSyncedGroup $allowNonSyncedGroup -errorAction STOP
+
+            $stopLoop = $TRUE
+        }
+        catch {
+            if ($loopCounter -gt 4)
+            {
+                out-logFile -string $_ -isError:$TRUE
+            }
+            else {
+                start-sleepProgress -sleepString "Uanble to set Office 365 DL Multi Value attributes - try again." -sleepSeconds 5
+
+                $loopCounter = $loopCounter +1
+            } 
+        }
+    } while ($stopLoop -eq $FALSE)
+
+    out-logfile -string ("The number of post create errors is: "+$global:postCreateErrors.count)
+
+    #Sometimes the configuration is not immediately available due to ad sync time in Office 365.
+    #Implement a loop that protects us here - trying 10 times and sleeping the bare minimum in between to eliminate longer static sleeps.
+
+    $stopLoop = $FALSE
+    [int]$loopCounter = 0
+
+    do {
+        try {
+            $office365DLConfigurationPostMigration = Get-O365DLConfiguration -groupSMTPAddress $office365DLConfigurationPostMigration.externalDirectoryObjectID -errorAction STOP
+
+            #If we made it this far we were successful - output the information to XML.
+
+            out-LogFile -string "Write new DL configuration to XML."
+
+            out-Logfile -string $office365DLConfigurationPostMigration
+            out-xmlFile -itemToExport $office365DLConfigurationPostMigration -itemNameToExport $office365DLConfigurationPostMigrationXML
+
+            #Now that we are this far - we can exit the loop.
+
+            $stopLoop=$TRUE
+        }
+        catch {
+            if ($loopCounter -gt 10)
+            {
+                out-logfile -string "Unable to get Office 365 distribution list configuration after 10 tries."
+                $stopLoop -eq $TRUE
+            }
+            else 
+            {
+                start-sleepProgress -sleepString "Unable to capture the Office 365 DL configuration.  Sleeping 15 seconds." -sleepSeconds 15
+
+                $loopCounter = $loopCounter+1 
+            }
+        }
+        
+    } while ($stopLoop -eq $FALSE)
+
+
+
     Out-LogFile -string "********************************************************************************"
     Out-LogFile -string "START Remove on premises distribution group from office 365.."
     Out-LogFile -string "********************************************************************************"
@@ -3586,6 +3723,8 @@ Function Start-DistributionListMigration
             out-logfile -string "All threads are not ready - sleeping."
         } until ((get-statusFileCount) -eq  $totalThreadCount)
     }
+
+    #=+=+=+=+=+
 
     try {
         move-toNonSyncOU -dn $originalDLConfiguration.distinguishedName -OU $dnNoSyncOU -globalCatalogServer $globalCatalogServer -adCredential $activeDirectoryCredential -errorAction STOP
@@ -3762,80 +3901,9 @@ Function Start-DistributionListMigration
         out-logfile -string $_ -isError:$TRUE
     }
 
-    #At this point we have validated that the group is gone from office 365.
-    #We can begin the process of recreating the distribution group in Exchange Online.
-
-    out-logfile "Attempting to create the DL in Office 365."
-
-    $stopLoop = $FALSE
-    [int]$loopCounter = 0
-
-    do {
-        try {
-            $office365DLConfigurationPostMigration=new-office365dl -originalDLConfiguration $originalDLConfiguration -office365DLConfiguration $office365DLConfiguration -grouptypeoverride $groupTypeOverride -errorAction STOP
-
-            #If we made it this far then the group was created.
-
-            $stopLoop=$TRUE
-        }
-        catch {
-            if ($loopCounter -gt 10)
-            {
-                out-logFile -string $_ -isError:$TRUE 
-            }
-            else 
-            {
-                out-logfile -string "Unable to create the distribution list on attempt.  Retry"
-
-                if ($loopCounter -gt 0)
-                {
-                    start-sleepProgress -sleepSeconds ($loopCounter * 5) -sleepstring "Invoke sleep - error creating distribution group."
-                }
-                $loopCounter=$loopCounter+1
-            }
-        }
-    } while ($stopLoop -eq $FALSE)
-
-    #Sometimes the configuration is not immediately available due to ad sync time in Office 365.
-    #Implement a loop that protects us here - trying 10 times and sleeping the bare minimum in between to eliminate longer static sleeps.
-
-    $stopLoop = $FALSE
-    [int]$loopCounter = 0
-
-    do 
-    {
-        try {
-                        
-            #If we hit here we did not get a terminating error.  Write the configuration.
-
-            out-LogFile -string "Write new DL configuration to XML."
-
-            out-Logfile -string $office365DLConfigurationPostMigration
-            out-xmlFile -itemToExport $office365DLConfigurationPostMigration -itemNameToExport $office365DLConfigurationPostMigrationXML
-            
-            #If we made it this far we can end the loop - we were succssful.
-
-            $stopLoop=$TRUE
-        }
-        catch {
-            if ($loopCounter -gt 10)
-            {
-                out-logfile -string "Unable to get Office 365 distribution list configuration after 10 tries."
-                $stopLoop -eq $TRUE
-            }
-            else 
-            {
-                start-sleepProgress -sleepString "Unable to capture the Office 365 DL configuration.  Sleeping 15 seconds." -sleepSeconds 15
-
-                $loopCounter = $loopCounter+1 
-            }
-        }   
-    } while ($stopLoop -eq $false)
-
     #EXIT #Debug Exit.
 
-    #Now it is time to set the multi valued attributes on the DL in Office 365.
-    #Setting these first must occur since moderators have to be established before moderation can be enabled.
+    #The first round of multivalued attributes were set - now that the group is gone we can proceed with updating the SMTP addresses.
 
     out-logFile -string "Setting the multivalued attributes of the migrated group."
 
@@ -3846,7 +3914,7 @@ Function Start-DistributionListMigration
     
     do {
         try {
-            set-Office365DLMV -originalDLConfiguration $originalDLConfiguration -office365DLConfiguration $office365DLConfiguration -office365DLConfigurationPostMigration $office365DLConfigurationPostMigration -exchangeDLMembership $exchangeDLMembershipSMTP -exchangeRejectMessage $exchangeRejectMessagesSMTP -exchangeAcceptMessage $exchangeAcceptMessagesSMTP -exchangeModeratedBy $exchangeModeratedBySMTP -exchangeManagedBy $exchangeManagedBySMTP -exchangeBypassMOderation $exchangeBypassModerationSMTP -exchangeGrantSendOnBehalfTo $exchangeGrantSendOnBehalfToSMTP -errorAction STOP -groupTypeOverride $groupTypeOverride -exchangeSendAsSMTP $exchangeSendAsSMTP -mailOnMicrosoftComDomain $mailOnMicrosoftComDomain -allowNonSyncedGroup $allowNonSyncedGroup
+            set-Office365DLMV -originalDLConfiguration $originalDLConfiguration -office365DLConfiguration $office365DLConfiguration -office365DLConfigurationPostMigration $office365DLConfigurationPostMigration -exchangeDLMembership $exchangeDLMembershipSMTP -exchangeRejectMessage $exchangeRejectMessagesSMTP -exchangeAcceptMessage $exchangeAcceptMessagesSMTP -exchangeModeratedBy $exchangeModeratedBySMTP -exchangeManagedBy $exchangeManagedBySMTP -exchangeBypassMOderation $exchangeBypassModerationSMTP -exchangeGrantSendOnBehalfTo $exchangeGrantSendOnBehalfToSMTP -errorAction STOP -groupTypeOverride $groupTypeOverride -exchangeSendAsSMTP $exchangeSendAsSMTP -mailOnMicrosoftComDomain $mailOnMicrosoftComDomain -allowNonSyncedGroup $allowNonSyncedGroup -preDelete:$FALSE -errorAction STOP
 
             $stopLoop = $TRUE
         }
@@ -3901,10 +3969,6 @@ Function Start-DistributionListMigration
         }
         
     } while ($stopLoop -eq $FALSE)
-
-    
-
-    
 
     #The distribution list has now been created.  There are single value attributes that we're now ready to update.
 
