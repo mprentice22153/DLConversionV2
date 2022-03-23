@@ -3587,18 +3587,18 @@ Function Start-DistributionListMigration
     $stopLoop = $FALSE
     [int]$loopCounter = 0
 
-    do 
-    {
+    do {
         try {
-                        
-            #If we hit here we did not get a terminating error.  Write the configuration.
+            $office365DLConfigurationPostMigration = Get-O365DLConfiguration -groupSMTPAddress $office365DLConfigurationPostMigration.externalDirectoryObjectID -errorAction STOP
+
+            #If we made it this far we were successful - output the information to XML.
 
             out-LogFile -string "Write new DL configuration to XML."
 
             out-Logfile -string $office365DLConfigurationPostMigration
             out-xmlFile -itemToExport $office365DLConfigurationPostMigration -itemNameToExport $office365DLConfigurationPostMigrationXML
-            
-            #If we made it this far we can end the loop - we were succssful.
+
+            #Now that we are this far - we can exit the loop.
 
             $stopLoop=$TRUE
         }
@@ -3614,8 +3614,9 @@ Function Start-DistributionListMigration
 
                 $loopCounter = $loopCounter+1 
             }
-        }   
-    } while ($stopLoop -eq $false)
+        }
+        
+    } while ($stopLoop -eq $FALSE)
 
     #The first round of multivalued attributes were set - now that the group is gone we can proceed with updating the SMTP addresses.
 
