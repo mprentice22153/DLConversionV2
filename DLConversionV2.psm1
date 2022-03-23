@@ -3685,6 +3685,66 @@ Function Start-DistributionListMigration
         
     } while ($stopLoop -eq $FALSE)
 
+    #The distribution list has now been created.  There are single value attributes that we're now ready to update.
+
+    $stopLoop = $FALSE
+    [int]$loopCounter = 0
+
+    do {
+        try {
+            set-Office365DL -originalDLConfiguration $originalDLConfiguration -office365DLConfiguration $office365DLConfiguration -groupTypeOverride $groupTypeOverride -office365DLConfigurationPostMigration $office365DLConfigurationPostMigration -preDelete:$FALSE -errorAction STOP
+            $stopLoop=$TRUE
+        }
+        catch {
+            if ($loopCounter -gt 4)
+            {
+                out-logfile -string $_ -isError:$TRUE
+            }
+            else 
+            {
+                start-sleepProgress -sleepString "Transient error updating distribution group - retrying." -sleepSeconds 5
+
+                $loopCounter=$loopCounter+1
+            }
+        }
+    } while ($stopLoop -eq $FALSE)
+
+    #Sometimes the configuration is not immediately available due to ad sync time in Office 365.
+    #Implement a loop that protects us here - trying 10 times and sleeping the bare minimum in between to eliminate longer static sleeps.
+
+    $stopLoop = $FALSE
+    [int]$loopCounter = 0
+
+    do {
+        try {
+            $office365DLConfigurationPostMigration = Get-O365DLConfiguration -groupSMTPAddress $office365DLConfigurationPostMigration.externalDirectoryObjectID -errorAction STOP
+
+            #If we made it this far we were successful - output the information to XML.
+
+            out-LogFile -string "Write new DL configuration to XML."
+
+            out-Logfile -string $office365DLConfigurationPostMigration
+            out-xmlFile -itemToExport $office365DLConfigurationPostMigration -itemNameToExport $office365DLConfigurationPostMigrationXML
+
+            #Now that we are this far - we can exit the loop.
+
+            $stopLoop=$TRUE
+        }
+        catch {
+            if ($loopCounter -gt 10)
+            {
+                out-logfile -string "Unable to get Office 365 distribution list configuration after 10 tries."
+                $stopLoop -eq $TRUE
+            }
+            else 
+            {
+                start-sleepProgress -sleepString "Unable to capture the Office 365 DL configuration.  Sleeping 15 seconds." -sleepSeconds 15
+
+                $loopCounter = $loopCounter+1 
+            }
+        }
+        
+    } while ($stopLoop -eq $FALSE)
 
 
     Out-LogFile -string "********************************************************************************"
@@ -3978,7 +4038,7 @@ Function Start-DistributionListMigration
 
     do {
         try {
-            set-Office365DL -originalDLConfiguration $originalDLConfiguration -office365DLConfiguration $office365DLConfiguration -groupTypeOverride $groupTypeOverride -office365DLConfigurationPostMigration $office365DLConfigurationPostMigration
+            set-Office365DL -originalDLConfiguration $originalDLConfiguration -office365DLConfiguration $office365DLConfiguration -groupTypeOverride $groupTypeOverride -office365DLConfigurationPostMigration $office365DLConfigurationPostMigration -preDelete:$FALSE -errorAction STOP
             $stopLoop=$TRUE
         }
         catch {

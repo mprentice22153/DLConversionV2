@@ -37,7 +37,9 @@
             [Parameter(Mandatory = $true)]
             [string]$groupTypeOverride,
             [Parameter(Mandatory = $true)]
-            $office365DLConfigurationPostMigration
+            $office365DLConfigurationPostMigration,
+            [Parameter(Mandatory = $true)]
+            [boolean]$preDelete=$TRUE
         )
 
         #Declare function variables.
