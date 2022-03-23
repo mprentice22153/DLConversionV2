@@ -1076,7 +1076,12 @@
             }
 
             out-logfile -string "Remove the SMTP Address added by creating the temporary DL."
+        }
 
+        #If this is updating email addresses post group delete remove the additional onmicrosoft.com address.
+
+        if ($preDelete -eq $FALSE)
+        {
             try {
                 out-logfile -string ("Removing: "+$functionEmailAddressToRemove)
                 Set-O365DistributionGroup -identity $functionExternalDirectoryObjectID -emailAddresses @{remove=$functionEmailAddressToRemove} -errorAction STOP -BypassSecurityGroupManagerCheck
